@@ -38,3 +38,5 @@ out = runCmd("docker", "inspect", container)
 print("Run with ", loads(out)[0]["Args"])
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
     print(line)
+configobj["Args"][1] = "./nodebb start"
+writeConfig(container, configobj)
