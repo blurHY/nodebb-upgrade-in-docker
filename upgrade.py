@@ -21,7 +21,7 @@ def runFollow(command):
     process = Popen(command, stdout=PIPE, shell=True)
     while True:
         line = process.stdout.readline().rstrip()
-        if not line:
+        if line is None:
             break
         yield line
 
