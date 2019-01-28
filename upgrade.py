@@ -20,8 +20,10 @@ def runCmd(*cmd):
 def runFollow(command):
     process = Popen(command, stdout=PIPE, shell=True)
     while True:
-        line = process.stdout.readline().rstrip()
+        line = process.stdout.readline().rstrip().decode("utf-8")
         if line == '' and process.poll() is not None:
+            break
+        if "Upgrade Complete!" in line:
             break
         if line:
             yield line.strip()
@@ -48,7 +50,7 @@ print("Run with ", loads(out)[0]["Args"])
 
 print(runCmd("docker", "start", container))
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
-    print(line.decode("utf-8"))
+    print(line)
 
 configobj["Args"][1] = "./nodebb start"
 writeConfig(container, configobj)
