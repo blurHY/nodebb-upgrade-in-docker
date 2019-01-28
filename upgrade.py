@@ -36,10 +36,15 @@ def restartDocker():
     print(out)
 
 
+def startOrStopContainer(container, start):
+    print(runCmd("docker", "start" if start else "stop", container))
+
+
 container = "dd7eba130a8c7186f501a3d900662954cf1941fd49ff6d62594bdd8fe91f1b30"
 configobj = loadConfig(container)
 
 print("Modify args for upgrading")
+startOrStopContainer(container, False)
 configobj["Args"][0] = "-c"
 configobj["Args"][1] = "./nodebb upgrade"
 writeConfig(container, configobj)
@@ -49,12 +54,14 @@ restartDocker()
 out = runCmd("docker", "inspect", container)
 print("Run with ", loads(out)[0]["Args"])
 
-print(runCmd("docker", "start", container))
+startOrStopContainer(container, True)
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
     print(line)
 
+startOrStopContainer(container, False)
 configobj = loadConfig(container)
 configobj["Args"][1] = "./nodebb start"
 writeConfig(container, configobj)
 
 restartDocker()
+startOrStopContainer(container, True)
