@@ -8,6 +8,7 @@ def loadConfig(container):
 
 
 def writeConfig(container, obj):
+    print("Write config")
     return dump(
         obj, open(f"/var/lib/docker/containers/{container}/config.v2.json",
                   "w"))
@@ -52,6 +53,7 @@ print(runCmd("docker", "start", container))
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
     print(line)
 
+configobj = loadConfig(container)
 configobj["Args"][1] = "./nodebb start"
 writeConfig(container, configobj)
 
