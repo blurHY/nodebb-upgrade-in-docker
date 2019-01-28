@@ -26,17 +26,27 @@ def runFollow(command):
         yield line
 
 
+def restartDocker():
+    print("Restart docker:")
+    out = runCmd("service", "docker", "restart")
+    print(out)
+
+
 container = "dd7eba130a8c7186f501a3d900662954cf1941fd49ff6d62594bdd8fe91f1b30"
 configobj = loadConfig(container)
+
 print("Modify args for upgrading")
 configobj["Args"][1] = "./nodebb upgrade"
 writeConfig(container, configobj)
-print("Restart docker:")
-out = runCmd("service", "docker", "restart")
-print(out)
+
+restartDocker()
+
 out = runCmd("docker", "inspect", container)
 print("Run with ", loads(out)[0]["Args"])
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
     print(line)
+
 configobj["Args"][1] = "./nodebb start"
 writeConfig(container, configobj)
+
+restartDocker()
