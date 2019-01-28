@@ -1,10 +1,16 @@
-from json import load, loads
+from json import load, loads, dump
 from subprocess import run, PIPE, Popen
 
 
 def loadConfig(container):
-    config = open(f"/var/lib/docker/containers/{container}/config.v2.json")
-    return load(config)
+    return load(
+        open(f"/var/lib/docker/containers/{container}/config.v2.json", "r"))
+
+
+def writeConfig(container, obj):
+    return dump(
+        obj, open(f"/var/lib/docker/containers/{container}/config.v2.json",
+                  "w"))
 
 
 def runCmd(*cmd):
@@ -24,6 +30,7 @@ container = "dd7eba130a8c7186f501a3d900662954cf1941fd49ff6d62594bdd8fe91f1b30"
 configobj = loadConfig(container)
 print("Modify args for upgrading")
 configobj["Args"][2] = "./nodebb upgrade"
+writeConfig(configobj)
 print("Restart docker:")
 out = runCmd("service", "docker", "restart")
 print(out)
