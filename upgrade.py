@@ -30,7 +30,7 @@ container = "dd7eba130a8c7186f501a3d900662954cf1941fd49ff6d62594bdd8fe91f1b30"
 configobj = loadConfig(container)
 print("Modify args for upgrading")
 configobj["Args"][1] = "./nodebb upgrade"
-writeConfig(configobj)
+writeConfig(container, configobj)
 print("Restart docker:")
 out = runCmd("service", "docker", "restart")
 print(out)
