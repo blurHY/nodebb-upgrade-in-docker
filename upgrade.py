@@ -21,9 +21,10 @@ def runFollow(command):
     process = Popen(command, stdout=PIPE, shell=True)
     while True:
         line = process.stdout.readline().rstrip()
-        if not line:
+        if line == '' and process.poll() is not None:
             break
-        yield line
+        if line:
+            yield line.strip()
 
 
 def restartDocker():
