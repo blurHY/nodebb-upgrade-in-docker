@@ -29,7 +29,7 @@ def runFollow(command):
 container = "dd7eba130a8c7186f501a3d900662954cf1941fd49ff6d62594bdd8fe91f1b30"
 configobj = loadConfig(container)
 print("Modify args for upgrading")
-configobj["Args"][2] = "./nodebb upgrade"
+configobj["Args"][1] = "./nodebb upgrade"
 writeConfig(configobj)
 print("Restart docker:")
 out = runCmd("service", "docker", "restart")
