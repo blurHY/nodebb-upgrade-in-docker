@@ -1,0 +1,1 @@
+# nodebb-upgrade-in-docker
