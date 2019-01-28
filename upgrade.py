@@ -21,7 +21,7 @@ def runFollow(command):
     process = Popen(command, stdout=PIPE, shell=True)
     while True:
         line = process.stdout.readline().rstrip()
-        if line is None:
+        if not line:
             break
         yield line
 
@@ -44,6 +44,8 @@ restartDocker()
 
 out = runCmd("docker", "inspect", container)
 print("Run with ", loads(out)[0]["Args"])
+
+print(runCmd("docker", "start", container))
 for line in runFollow(f"docker logs --tail 100 -f {container}"):
     print(line.decode("utf-8"))
 
